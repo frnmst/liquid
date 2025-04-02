@@ -387,7 +387,6 @@ module Liquid
         end
       elsif ary.all? { |el| el.respond_to?(:[]) }
         begin
-          property = Utils.to_s(property)
           ary.sort { |a, b| nil_safe_compare(a[property], b[property]) }
         rescue TypeError
           raise_property_error(property)
@@ -417,7 +416,6 @@ module Liquid
         end
       elsif ary.all? { |el| el.respond_to?(:[]) }
         begin
-          property = Utils.to_s(property)
           ary.sort { |a, b| nil_safe_casecmp(a[property], b[property]) }
         rescue TypeError
           raise_property_error(property)
@@ -505,7 +503,6 @@ module Liquid
       elsif ary.empty? # The next two cases assume a non-empty array.
         []
       else
-        property = Utils.to_s(property)
         ary.uniq do |item|
           item[property]
         rescue TypeError
@@ -537,7 +534,6 @@ module Liquid
     # @liquid_syntax array | map: string
     # @liquid_return [array[untyped]]
     def map(input, property)
-      property = Utils.to_s(property)
       InputIterator.new(input, context).map do |e|
         e = e.call if e.is_a?(Proc)
 
@@ -567,7 +563,6 @@ module Liquid
       elsif ary.empty? # The next two cases assume a non-empty array.
         []
       else
-        property = Liquid::Utils.to_s(property)
         ary.reject do |item|
           item[property].nil?
         rescue TypeError
@@ -957,8 +952,6 @@ module Liquid
     # @liquid_syntax array | sum
     # @liquid_return [number]
     def sum(input, property = nil)
-      property = property.nil? ? nil : Utils.to_s(property)
-
       ary = InputIterator.new(input, context)
       return 0 if ary.empty?
 
